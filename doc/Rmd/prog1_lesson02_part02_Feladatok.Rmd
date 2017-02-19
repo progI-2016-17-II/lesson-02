@@ -52,3 +52,6 @@ output: html_document
 3. Nézd meg, hogy a vörösborok savasabbak-e (fixed_acidity) a fehéreknél!
 
 ---
+
+## Adatok forrása
+Lantz, B. (2013): *Machine Learning with R*. Packt Books.
