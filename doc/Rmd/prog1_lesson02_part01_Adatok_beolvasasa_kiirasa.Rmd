@@ -1,0 +1,284 @@
+---
+title: "1. Adatok beolvasása és kiírása"
+subtitle: |
+  | Kurzus: Programozás I. 2. óra
+author: |
+  | Oktató: Balogh Kitti kttblgh@gmail.com
+date: "Időpont: 2017-02-21"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = '../../')
+```
+
+## Vázlat
+
+- [R-hez, package-ekhez tartozó adatfájlok](#r-hez, package-ekhez-tartozo-adatfajlok)
+- [CSV-k, TSV-k](#csv-k-tsv-k)
+- [Excel fájlok](#excel-fajlok)
+- [SAV fájlok](#sav-fajlok)
+- [DTA fájlok](#dta-fajlok)
+- [Egyéb statisztikai programok](#egyeb-statisztikai-programok)
+- [Adatbázisok](#adatbazisok)
+- [R bináris fájlok](#r-binaris-fajlok)
+- [Irodalom](#irodalom)
+
+## R-hez, package-ekhez tartozó fájlok
+- az R és néhány package a függvényeken kívül adatfájlokat is tartalmaz
+- az R alap és a betöltött package-ek datasetjeit a ```data()``` függvény argumentumok nélküli megadásával nézhetjük meg
+- a ```data(package = "packagename")``` adott package datasetjeit adja meg
+
+```{r ggplot2, echo = TRUE}
+#----R-hez, package-ekhez tartozó adatfájlok------------------------------------
+
+## R alap datasetjei
+# RStudio-ban külön ablakban nyílik meg
+data()
+
+## iris dataset
+# R-hez tartozó dataset, mint pl. az mtcars is
+# iris dataset betöltése 
+data(iris)
+head(iris)
+
+## diamonds dataset
+# ggplot2 package-hez tartozó dataset
+# ggplot2 installálása, ha szükséges, majd behívás
+if (!("ggplot2" %in% installed.packages())){
+  install.packages(ggplot2)
+}
+library(ggplot2)
+
+# ggplot2 datasetjei
+# RStudio-ban külön ablakban nyílik meg
+data(package = "ggplot2")
+
+# diamonds data set betöltése
+data(diamonds)
+head(diamonds)
+
+## loldata datasetjei
+# loldata installálása, behívása
+if (!("devtools" %in% installed.packages())){
+  install.packages(devtools)
+}
+if (!("loldata" %in% installed.packages())){
+  devtools::install_github("tadaadata/loldata")
+}
+library(loldata)
+
+# loldata datasetjei
+# RStudio-ban külön ablakban nyílik meg
+data(package = "loldata")
+```
+## CSV-k, TSV-k
+- táblázatos formában lévő adatok
+- csv: comma separated file
+- tsv: tab separated file
+- a csv szeparátora általában vagy "," vagy ";"
+- bár van külön ```read.csv``` és ```read.delim``` függvény a csv-k, illetve a tsv-k beolvasásához, a legegyértelműbb, ha ```read.table```-t használunk az argumentumok megadásával
+- a behívott fájl egy data frame lesz
+- kiíráshoz a ```write.table``` függvényt használjuk
+
+### Megjegyzések szöveges adatokat tartalmazó fájlokhoz
+- Ha van szöveges adat egy adatfájlban, a legjobb, ha tsv-ként mentjük el, mert vessző és pontosvessző könnyen előfordulhat a szövegekben. Ha mégis ilyen fájllal kell dolgoznunk, használjuk a ```read.delim2```-t vagy a ```read.csv2```-t a behíváshoz. 
+- Lehetőleg UTF-8 karakterkódolású fájlokkal dolgozzunk, főleg, ha van az angol abc-től eltérő betű az oszlopnevekben vagy a szöveges adatokban. Erre a fájlok beolvasásánál is figyeljünk oda és adjuk meg külön argumentumként.
+- A ```read.table``` és társai a szöveges adatokat automatikusan factor-ként hívják be. Ezt a "stringsAsFactors = FALSE" argumentum megadásával lehet megelőzni, ami ráadásul gyorsít is a beolvasáson. (Ugyanez az argumentum egyébként a "data.frame" függvény esetében is működik.)
+
+```{r, echo = TRUE}
+#----CSV-k, TSV-k beolvasása, kiírása-------------------------------------------
+
+# iris csv beolvasása
+iris_csv <- read.table(file = "data/iris_import/iris.csv", header = T, sep = ",",
+                       dec = ".", fileEncoding = "utf-8")
+
+# iris tsv beolvasása
+iris_tsv <- read.table(file = "data/iris_import/iris.tsv", header = T, sep = "\t",
+                       dec = ".", fileEncoding = "utf-8")
+
+# data frame-ek első 5 sora
+head(iris)
+head(iris_csv)
+head(iris_tsv)
+
+# felesleges data frame-ek törlése
+rm(iris_csv)
+rm(iris_tsv)
+
+# csv kiírása
+# új data frame a setosa faj adataival
+setosa <- subset(iris, Species == "setosa")
+write.table(setosa, file = "data/iris_export/setosa.csv", sep = ",", row.names = F,
+            fileEncoding = "utf-8")
+
+# tsv kiírása
+# új data frame a versicolor faj adataival
+versicolor <- subset(iris, Species == "versicolor")
+write.table(versicolor, file = "data/iris_export/versicolor.tsv", sep = "\t", 
+            row.names = F, fileEncoding = "utf-8")
+
+# felesleges data frame-ek törlése
+rm(setosa)
+rm(versicolor)
+```
+
+## Excel fájlok
+- habár sokat használt fájlformátum, nehézkes a kezelése, ezért inkább mentsünk csv-be vagy tsv-be Excelből, és úgy hívjuk be a fájlt
+- persze vannak package-ek Excel fájlok beolvasásához (```gdata```, ```XLConnect```, ```xlsReadWrite``` stb.), erről [itt](https://www.r-bloggers.com/read-excel-files-from-r/){target="_blank"} tudtok olvasni
+- de van egy univerzálisabb és könnyebb kezelhetőséget adó package, a [rio](https://cran.r-project.org/web/packages/rio/vignettes/rio.html){target="_blank"}, ami összegyűjti több package függvényét és lehetővé teszi az általánosan használt fájlformátumok egységes importját, exportját és konvertálását
+- a beolvasott adatfájlok data.frame-ek lesznek
+
+```{r rio, echo = TRUE}
+#----Excel fájlok beolvasása, kiírása-------------------------------------------
+
+# rio package installálása, ha szükséges, majd behívása
+if (!("rio" %in% installed.packages())){
+  install.packages(rio)
+}
+library(rio)
+
+# iris xlsx beolvasása
+iris_xlsx <- import(file = "data/iris_import/iris.xlsx")
+
+# data frame-ek első 5 sora
+head(iris)
+head(iris_xlsx)
+
+# xlsx kiírása
+# új data frame a virginica faj adataival
+virginica <- subset(iris, Species == "virginica")
+export(virginica, "data/iris_export/virginica.xlsx")
+
+# felesleges data frame-ek törlése
+rm(iris_xlsx)
+rm(virginica)
+```
+
+## SAV fájlok
+- sav fájlt a ```haven``` és a ```foreign``` package-ek segítéségével is be lehet olvasni
+- az egyszerűség kedvéért mi a ```rio``` package-nél maradunk, ami egyébként ennek a két package-nek a függvényeit használja fel
+- a beolvasott adatfájlok data.frame-ek lesznek
+
+```{r, echo = TRUE}
+#----SAV fájlok beolvasása, kiírása---------------------------------------------
+
+# rio package installálása, ha szükséges, majd behívása
+# if (!("rio" %in% installed.packages())){
+#   install.packages(rio)
+# }
+# library(rio)
+
+# iris sav beolvasása
+iris_sav <- import(file = "data/iris_import/iris.sav")
+
+# data frame-ek első 5 sora
+head(iris)
+head(iris_sav)
+
+# sav kiírása
+# új data frame a setosa faj adataival
+setosa <- subset(iris_sav, Species == 1)
+export(setosa, "data/iris_export/setosa.sav")
+
+# felesleges data frame-ek törlése
+rm(iris_sav)
+rm(setosa)
+```
+
+## DTA fájlok
+- dta fájlt a ```haven``` és a ```foreign``` package-ek segítéségével is be lehet olvasni
+- az egyszerűség kedvéért mi a ```rio``` package-nél maradunk, ami egyébként ennek a két package-nek a függvényeit használja fel
+- a beolvasott adatfájlok data.frame-ek lesznek
+
+```{r, echo = TRUE}
+#----DTA fájlok beolvasása, kiírása---------------------------------------------
+
+# rio package installálása, ha szükséges, majd behívása
+# if (!("rio" %in% installed.packages())){
+#   install.packages(rio)
+# }
+# library(rio)
+
+# iris dta beolvasása
+iris_dta <- import(file = "data/iris_import/iris.dta")
+
+# data frame-ek első 5 sora
+head(iris)
+head(iris_dta)
+
+# dta kiírása
+# új data frame a setosa faj adataival
+setosa <- subset(iris_dta, iris == 1)
+export(setosa, "data/iris_export/setosa.dta")
+
+# felesleges data frame-ek törlése
+rm(iris_dta)
+rm(setosa)
+```
+
+## Egyéb statisztikai programok
+- a ```rio``` package-ben lehetőség van még további statisztikai programok fájljainak beolvasására, pl. SAS, Minitab, Systat, de export nem mindegyiknél van
+- az import a sav és dta fájloknál látott módon működik
+
+## Adatbázisok
+- az R nem hatékony nagyon nagy adatmennyiség manipulálására, ugyanis mindent a memóriában végez
+- ilyenkor praktikus adatbázisokat, relációs adatbázisokat használni, amik hatékonyabban tárolják az adatokat, gyorsabb manipulálásra adnak lehetőséget
+
+```{r, echo = TRUE}
+#----SQlite fájlból adatbeolvasás-----------------------------------------------
+
+# RSQLite package installálása, ha szükséges, majd behívása
+if (!("RSQLite" %in% installed.packages())){
+  install.packages(RSQLite)
+}
+library("RSQLite")
+
+# kapcsolódás az sqlite fájlhoz
+RSQLite::SQLite()
+drv <- SQLite()
+con <- dbConnect(drv, dbname = "data/iris_import/iris.sqlite")
+
+# táblák listája
+tables <- dbListTables(con)
+
+# Iris tábla kiválasztása
+iris_sqlite <- dbGetQuery(con, 'select * from Iris')
+head(iris_sqlite)
+
+# setosa faj adatainak kiválasztása az Iris tábláról
+setosa <- dbGetQuery(con, "SELECT * from Iris WHERE Species == 'Iris-setosa'")
+setosa
+
+# lekapcsolódás
+dbDisconnect(con)
+
+# felesleges data frame-ek törlése
+rm(iris_sqlite)
+```
+
+## R bináris fájlok
+- bármilyen R objektumot (adat, függvény, változó...) kimenthetünk rdata formátumba
+- tök hasznos tud lenni, ha pl. lefuttattunk egy modellt, ami több órán, napon keresztül futott
+
+
+```{r, echo = TRUE, error = TRUE}
+#----R bináris fájlok kiírása, beolvasása---------------------------------------
+
+# iris dataset kiírása rdata-ba
+save(setosa, file = "data/iris_export/setosa.rdata")
+
+# iris változó törlése
+rm(setosa)
+head(setosa)
+
+# iris rdata beolvasása
+load("data/iris_export/setosa.rdata")
+head(setosa)
+```
+
+## Irodalom
+- Lander 6.1-6.8
+- [R I/O manual](https://cran.r-project.org/doc/manuals/r-release/R-data.html){target="_blank"}
+- [rio package](https://cran.r-project.org/web/packages/rio/vignettes/rio.html){target="_blank"}
