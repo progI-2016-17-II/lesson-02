@@ -1,0 +1,54 @@
+---
+title: "2. Feladatok"
+subtitle: |
+  | Kurzus: Programozás I. 2. óra
+author: |
+  | Oktató: Balogh Kitti kttblgh@gmail.com
+date: "Időpont: 2017-02-21"
+output: html_document
+---
+
+---
+
+## I. Feladat
+1. A "lesson_02" projekt "src" mappájában nyiss egy új R szkriptet "prog1_lesson02_part02_Feladatok.R" néven!
+2. Csinálj kikommentelt fejlécet is, amiben megadod a következőket: 
+    - fájl címe (Feladatok)
+    - kurzus neve (Programozás I.)
+    - óra sorszáma (2. óra)
+    - neved
+    - dátum (2017-02-21)
+3. A következő feladatok megoldásait ebbe a szkriptbe írd és kommenteld folyamatosan, amit csinálsz!
+4. Figyelj, hogy minél jobban betartsd a R kódírási stílusra vonatkozó irányelveket!
+
+---
+
+## II. Feladat
+1. Az R alapból tartalmaz egy datasetet, amiben Loblolly fenyők növekedési adatai találhatók. Keresd meg ezt a datasetet és olvasd be!
+2. Nézd meg, melyik seed nőtt a legmagasabbra!
+3. Nézd meg, melyik seed nőtt a legmagasabbra 15 év után!
+
+---
+
+## III. Feladat
+1. A "data/assignments" mappában találsz egy "credit.csv" nevű fájlt. Olvasd be "credit" néven!
+2. Akiknek a "credit_history" oszlopában "critical" érték található, mi a leggyakoribb ok, amire hitelt vettek fel?
+3. Ők átlagosan mekkora hitelt vesznek fel?
+4. Akiknek a "credit_history" oszlopában "perfect" érték található, mi a leggyakoribb ok, amire hitelt vettek fel?
+5. Ők átlagosan mekkora hitelt vesznek fel?
+
+---
+
+## IV. Feladat
+1. A "data/assignments" mappában találsz egy "sms_spam.tsv" nevű fájlt. Olvasd be "sms" néven úgy, hogy a "text" oszlop character,
+ a "type" oszlop factor típusú legyen!
+2. Nézd meg a spamek és a hamek átlagos hosszát!
+
+---
+
+## V. Feladat
+1. A "data/assignments" mappában találsz egy "redwines.xlsx" és egy "whitewines.xlsx" nevű fájlt. Olvasd be ezeket "red", illetve "white" néven!
+2. Kapcsold össze a két data frame-et "wines" néven úgy, hogy egy új "type" nevű oszlopban szerepeljen, hogy adott sor "red" vagy "white" volt eredetileg! A "type" oszlop legyen factor típusú!
+3. Nézd meg, hogy a vörösborok savasabbak-e (fixed_acidity) a fehéreknél!
+
+---
