@@ -21,7 +21,7 @@ head(iris)
 # ggplot2 package-hez tartozó dataset
 # ggplot2 installálása, ha szükséges, majd behívás
 if (!("ggplot2" %in% installed.packages())) {
-  install.packages(ggplot2)
+  install.packages("ggplot2")
 }
 library(ggplot2)
 
@@ -36,7 +36,7 @@ head(diamonds)
 ## loldata datasetjei
 # loldata installálása, behívása
 if (!("devtools" %in% installed.packages())) {
-  install.packages(devtools)
+  install.packages("devtools")
 }
 if (!("loldata" %in% installed.packages())) {
   devtools::install_github("tadaadata/loldata")
@@ -110,7 +110,7 @@ rm(versicolor)
 
 # rio package installálása, ha szükséges, majd behívása
 if (!("rio" %in% installed.packages())) {
-  install.packages(rio)
+  install.packages("rio")
 }
 library(rio)
 
@@ -135,7 +135,7 @@ rm(virginica)
 
 # rio package installálása, ha szükséges, majd behívása
 # if (!("rio" %in% installed.packages())){
-#   install.packages(rio)
+#   install.packages("rio")
 # }
 # library(rio)
 
@@ -160,7 +160,7 @@ rm(setosa)
 
 # rio package installálása, ha szükséges, majd behívása
 # if (!("rio" %in% installed.packages())){
-#   install.packages(rio)
+#   install.packages("rio")
 # }
 # library(rio)
 
@@ -185,7 +185,7 @@ rm(setosa)
 
 # RSQLite package installálása, ha szükséges, majd behívása
 if (!("RSQLite" %in% installed.packages())) {
-  install.packages(RSQLite)
+  install.packages("RSQLite")
 }
 library("RSQLite")
 
